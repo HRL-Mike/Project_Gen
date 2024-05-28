@@ -53,7 +53,7 @@ class EndoVis18VQAGPTSentence(Dataset):
         file_name = self.vqas[idx][0].split('/')[-1]
         
         # img loc[3],
-        img_loc = os.path.join(seq_path, 'left_fr', file_name.split('_')[0] + '.png')
+        img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
         if self.transform: 
             img = Image.open(img_loc)
             img = self.transform(img)
