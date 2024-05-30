@@ -65,9 +65,11 @@ class EndoVis18VQAGPTSentence(Dataset):
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
         answer = '<|sep|> ' + answer
-        question = self.tokenizer(text=question, return_tensors="pt", padding='max_length', max_length=25)
-        answer = self.tokenizer(text=answer, return_tensors="pt", padding='max_length', max_length=35)
+        question_inputs = self.tokenizer(text=question, return_tensors="pt", padding='max_length', max_length=25)
+        answer_inputs = self.tokenizer(text=answer, return_tensors="pt", padding='max_length', max_length=35)
+        question_attention_mask = torch.squeeze(question_inputs['attention_mask'], 1)
+        answer_attention_mask = torch.squeeze(answer_inputs['attention_mask'], 1)
         question_features = self.clip_model.get_text_features(**question)  # 512
         answer_features = self.clip_model.get_text_features(**answer)  # 512
 
-        return img_loc, image_features, question_features, answer_features
+        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask
