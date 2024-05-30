@@ -59,8 +59,8 @@ class EndoVis18VQAGPTSentence(Dataset):
         # img
         img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
         img = Image.open(img_loc)
-        inputs = self.visual_processor(images=img, return_tensors="pt")
-        image_features = self.clip_model.get_image_features(**inputs)  # 512
+        img_inputs = self.visual_processor(images=img, return_tensors="pt")
+        image_features = self.clip_model.get_image_features(**img_inputs)  # 512
 
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
@@ -72,4 +72,4 @@ class EndoVis18VQAGPTSentence(Dataset):
         question_features = self.clip_model.get_text_features(**question)  # 512
         answer_features = self.clip_model.get_text_features(**answer)  # 512
 
-        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask, answer_inputs
+        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask, answer_inputs, img_inputs
