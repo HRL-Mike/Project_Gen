@@ -5,7 +5,6 @@ from PIL import Image
 import torch
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
-from transformers import CLIPProcessor, AutoTokenizer, AutoProcessor
 from pathlib import Path
 from transformers import GPT2Tokenizer
 from transformers import AutoTokenizer, CLIPModel
@@ -60,17 +59,9 @@ class EndoVis18VQAGPTSentence(Dataset):
         # img
         img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
         img = Image.open(img_loc)
-        img_inputs = self.visual_processor(images=img, return_tensors="pt")
-        image_features = self.clip_model.get_image_features(**img_inputs)  # 512
 
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
         answer = '<|sep|> ' + answer
-        question_inputs = self.tokenizer(text=question, return_tensors="pt", padding='max_length', max_length=25)
-        answer_inputs = self.tokenizer(text=answer, return_tensors="pt", padding='max_length', max_length=35)
-        question_attention_mask = torch.squeeze(question_inputs['attention_mask'], 1)
-        answer_attention_mask = torch.squeeze(answer_inputs['attention_mask'], 1)
-        question_features = self.clip_model.get_text_features(text=question)  # 512
-        answer_features = self.clip_model.get_text_features(text=question)  # 512
 
-        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask, answer_inputs, img_inputs
+        return img_loc, img, question, answer
