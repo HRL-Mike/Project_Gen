@@ -72,4 +72,4 @@ class EndoVis18VQAGPTSentence(Dataset):
         question_features = self.clip_model.get_text_features(**question)  # 512
         answer_features = self.clip_model.get_text_features(**answer)  # 512
 
-        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask
+        return img_loc, image_features, question_features, answer_features, question_attention_mask, answer_attention_mask, answer_inputs
