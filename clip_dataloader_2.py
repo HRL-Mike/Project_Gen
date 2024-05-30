@@ -14,7 +14,7 @@ class EndoVis18VQAGPTSentence(Dataset):
 
         self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        self.tokenizer.pad_token = tokenizer.eos_token
+        self.tokenizer.pad_token = self.tokenizer.eos_token
 
         special_token = '<|sep|>'
         self.tokenizer.add_special_tokens({'additional_special_tokens': [special_token]})
