@@ -12,16 +12,6 @@ from transformers import AutoTokenizer, CLIPModel
 
 class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
-        # image processor
-        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.visual_processor = AutoProcessor.from_pretrained("openai/clip-vit-base-patch32")
-        # text processor
-        self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        self.tokenizer.pad_token = self.tokenizer.eos_token
-
-        special_token = '<|sep|>'
-        self.tokenizer.add_special_tokens({'additional_special_tokens': [special_token]})
-
         # files, question and answers
         filenames = []
         for curr_seq in seq:
