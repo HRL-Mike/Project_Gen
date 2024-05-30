@@ -4,7 +4,7 @@ import glob
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
-from transformers import CLIPProcessor, AutoTokenizer
+from transformers import CLIPProcessor, AutoTokenizer, AutoProcessor
 from pathlib import Path
 from transformers import GPT2Tokenizer
 from transformers import AutoTokenizer, CLIPModel
