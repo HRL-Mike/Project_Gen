@@ -14,9 +14,7 @@ from torchvision.transforms.functional import InterpolationMode
 class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
         self.transform = transforms.Compose([
-                transforms.Resize((224, 224), interpolation=InterpolationMode.BICUBIC),  # input image size
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             ])
         
         # files, question and answers
@@ -55,7 +53,8 @@ class EndoVis18VQAGPTSentence(Dataset):
 
         # img
         img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
-        img = Image.open(img_loc).convert('RGB')
+        raw_image = Image.open(img_loc).convert('RGB')
+        img = self.transform(raw_image)
 
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
