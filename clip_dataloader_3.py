@@ -55,8 +55,7 @@ class EndoVis18VQAGPTSentence(Dataset):
 
         # img
         img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
-        raw_image = Image.open(img_loc).convert('RGB')
-        img = self.transform(raw_image)
+        img = Image.open(img_loc).convert('RGB')
 
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
