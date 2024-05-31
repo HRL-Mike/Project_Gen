@@ -51,11 +51,10 @@ class EndoVis18VQAGPTSentence(Dataset):
 
         # img
         img_loc = os.path.join(seq_path, 'left_frames', file_name.split('_')[0] + '.png')
-        raw_image = Image.open(img_loc).convert('RGB')
-        img = self.transform(raw_image)
+        img_features = self.clip_processor(images=Image.open(img_loc), return_tensors="pt")
 
         # question and answer
         question, answer = self.vqas[idx][1].split('|')
         answer = '<|sep|> ' + answer
 
-        return img_loc, img, question, answer
+        return img_loc, img_features, question, answer
