@@ -13,9 +13,7 @@ from torchvision.transforms.functional import InterpolationMode
 
 class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
-        self.transform = transforms.Compose([
-                transforms.ToTensor(),
-            ])
+        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         
         # files, question and answers
         filenames = []
