@@ -9,6 +9,7 @@ from pathlib import Path
 from transformers import GPT2Tokenizer
 from transformers import AutoTokenizer, CLIPModel
 from torchvision.transforms.functional import InterpolationMode
+from transformers import CLIPProcessor
 
 
 class EndoVis18VQAGPTSentence(Dataset):
