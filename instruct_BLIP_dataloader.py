@@ -9,7 +9,7 @@ from transformers import InstructBlipProcessor
 
 class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
-        self.instruct_blip_processor = InstructBlipProcessor.from_pretrained("Salesforce/instruct-blip-flan-t5")
+        self.instruct_blip_processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
         
         # files, question and answers
         filenames = []
