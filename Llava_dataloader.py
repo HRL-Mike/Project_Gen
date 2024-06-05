@@ -5,10 +5,13 @@ from PIL import Image
 from torch.utils.data import Dataset
 from pathlib import Path
 from transformers import AutoProcessor
+from transformers import GPT2Tokenizer
 
 
 class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
+        self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        self.tokenizer.pad_token = self.tokenizer.eos_token
         self.processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
         
         # files, question and answers
@@ -46,6 +49,7 @@ class EndoVis18VQAGPTSentence(Dataset):
         question, answer = self.vqas[idx][1].split('|')
         prompt = f"<image>\nUSER: {question}\nASSISTANT:"
         # inputs
-        inputs = self.processor(text=prompt, images=image, return_tensors="pt")
+        gpt2_inputs = self.tokenizer(prompt, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
+        inputs = self.processor(input_ids=gpt2_inputs['input_ids'], images=image, return_tensors='pt')
 
         return inputs, answer
