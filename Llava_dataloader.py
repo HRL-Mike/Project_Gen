@@ -13,9 +13,6 @@ class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
         self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         self.tokenizer.pad_token = self.tokenizer.eos_token
-        special_token = '<image>'
-        self.tokenizer.add_special_tokens({'additional_special_tokens': [special_token]})
-        
         self.processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
         
         # files, question and answers
@@ -51,17 +48,21 @@ class EndoVis18VQAGPTSentence(Dataset):
         image = Image.open(img_loc)
         # prompt
         question, answer = self.vqas[idx][1].split('|')
+        
         # 1, 32000, 13, 11889, 29901
-        prompt_inputs = self.tokenizer(question, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
-
+        prompt_inputs = self.tokenizer(question, return_tensors='pt')
         additional_ids = [1, 32000]
         additional_ids = torch.tensor(additional_ids).unsqueeze(0)
         input_ids = prompt_inputs['input_ids']
         attention_mask = prompt_inputs['attention_mask']
-        modified_input_ids = torch.cat([additional_ids, input_ids[:, :-len(additional_ids)]], dim=1)
-        modified_attention_mask = torch.cat([torch.ones((1, len(additional_ids))), attention_mask[:, :-len(additional_ids)]], dim=1)
-        prompt_inputs['input_ids'] = modified_input_ids
-        prompt_inputs['attention_mask'] = modified_attention_mask
+
+        pad_length = 40 - input_ids.size(1) - additional_ids.size(1)
+        pad_token_id = self.tokenizer.pad_token_id
+        
+        padded_input_ids = torch.cat([torch.full((1, pad_length), pad_token_id), additional_ids, input_ids], dim=1)
+        padded_attention_mask = torch.cat([torch.zeros((1, pad_length), dtype=torch.long), torch.ones((1, additional_ids.size(1)), dtype=torch.long), attention_mask], dim=1)
+        prompt_inputs['input_ids'] = padded_input_ids
+        prompt_inputs['attention_mask'] = padded_attention_mask
         
         # inputs
         llava_inputs = self.processor(text=question, images=image, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
