@@ -48,8 +48,8 @@ class EndoVis18VQAGPTSentence(Dataset):
         # prompt
         question, answer = self.vqas[idx][1].split('|')
         prompt = f"<image>\nUSER: {question}\nASSISTANT:"
+        prompt_inputs = self.tokenizer(prompt, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
         # inputs
-        gpt2_inputs = self.tokenizer(prompt, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
-        inputs = self.processor(input_ids=gpt2_inputs['input_ids'], images=image, return_tensors='pt')
+        image_inputs = self.processor(images=image, return_tensors='pt')
 
-        return inputs, answer
+        return prompt_inputs, image_inputs, answer
