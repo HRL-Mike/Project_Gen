@@ -12,6 +12,9 @@ class EndoVis18VQAGPTSentence(Dataset):
     def __init__(self, seq, folder_head, folder_tail):
         self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         self.tokenizer.pad_token = self.tokenizer.eos_token
+        special_token = '<image>'
+        self.tokenizer.add_special_tokens({'additional_special_tokens': [special_token]})
+        
         self.processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
         
         # files, question and answers
