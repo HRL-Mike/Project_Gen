@@ -64,6 +64,6 @@ class EndoVis18VQAGPTSentence(Dataset):
         prompt_inputs['attention_mask'] = modified_attention_mask
         
         # inputs
-        llava_inputs = self.processor(text=prompt, images=image, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
+        llava_inputs = self.processor(text=question, images=image, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
 
         return prompt_inputs, llava_inputs, answer
