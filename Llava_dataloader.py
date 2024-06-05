@@ -50,6 +50,6 @@ class EndoVis18VQAGPTSentence(Dataset):
         prompt = f"<image>\nUSER: {question}\nASSISTANT:"
         prompt_inputs = self.tokenizer(prompt, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
         # inputs
-        image_inputs = self.processor(images=image, return_tensors='pt')
+        llava_inputs = self.processor(text=prompt, images=image, return_tensors='pt')
 
-        return prompt_inputs, image_inputs, answer
+        return prompt_inputs, llava_inputs, answer
