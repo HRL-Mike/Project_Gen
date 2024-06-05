@@ -50,8 +50,17 @@ class EndoVis18VQAGPTSentence(Dataset):
         image = Image.open(img_loc)
         # prompt
         question, answer = self.vqas[idx][1].split('|')
-        prompt = f"<image>\nUSER: {question}"
-        prompt_inputs = self.tokenizer(prompt, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
+        # 1, 32000, 13, 11889, 29901
+        prompt_inputs = self.tokenizer(question, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
+
+        additional_ids = [1, 32000]
+        input_ids = prompt_inputs['input_ids']
+        attention_mask = prompt_inputs['attention_mask']
+        modified_input_ids = torch.cat([torch.tensor(additional_ids), input_ids[:-len(additional_ids)]])
+        modified_attention_mask = torch.cat([torch.ones(len(additional_ids)), attention_mask[:-len(additional_ids)]])
+        prompt_inputs['input_ids'] = modified_input_ids
+        prompt_inputs['attention_mask'] = modified_attention_mask
+        
         # inputs
         llava_inputs = self.processor(text=prompt, images=image, return_tensors='pt', padding='max_length', max_length=40, truncation=True)
 
